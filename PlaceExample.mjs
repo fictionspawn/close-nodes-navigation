@@ -19,7 +19,7 @@ const enterDoorButton = new ActionButton("actionbutton", 350, 430, 110, 250, Ent
 const placeTextButton = new TextButton("placetextbutton", 220, 380, 206, 320, "You  clicked the text button, and text is shown.");
 
 // initialize canvas
-const sceneItemCanavas = new Canvas("sceneitemcanvas", imageForSceneItemCanvas);
+const sceneItemCanvas = new Canvas("sceneitemcanvas", imageForSceneItemCanvas);
 const imageCanvasForTextButton = new CanvasFree("imagecanvasfortextbutton", imageForTextButtonCanvas , 220, 380, 206, 320);
 
 
@@ -34,7 +34,7 @@ export function PlaceTextButton() {
 
 //Activate canvas and images when place is loaded, and remove them when changed.
 export function SceneItemCanvas() {
-    sceneItemCanavas.activate();
+    sceneItemCanvas.activate();
 }
 
 export function ImageCanvasForTextButton() {
@@ -46,7 +46,6 @@ let theThingThatHappened = false;
 //functions to be called when place is loaded.
 export function LoadedWhenPlaceClassIsInitiated() {
 if (!theThingThatHappened) {
-    console.log("This function is called when the place is loaded")
     theThingThatHappened = true;
 } 
 }
@@ -54,7 +53,6 @@ if (!theThingThatHappened) {
 //functions to be called when place is removed.
 export function LoadedWhenPlaceClassIsRemoved() {
     theThingThatHappened = false;
-    console.log("This function is called when the place is removed.")
 }
 
 

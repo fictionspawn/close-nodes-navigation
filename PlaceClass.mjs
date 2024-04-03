@@ -1,8 +1,12 @@
 import { Background } from "./Background.mjs";
 import { CreateButton} from "./GameManager.mjs";
-import { example1Image, example2Image, example3Image, example4Image, exampleImage } from "./Images.mjs";
+import { example1Image, example2Image, example3Image, example4Image, exampleImage } from "./BackgroundImages.mjs";
 import { EnterDoorButton, ImageCanvasForTextButton, LoadedWhenPlaceClassIsInitiated, LoadedWhenPlaceClassIsRemoved, PlaceTextButton, SceneItemCanvas } from "./PlaceExample.mjs";
 import { RemoveTextFunction } from "./TextBubbleScript.mjs";
+import { AnimationButton, AnimationStopOnLastButton, StopAnimation, StopAnimationStopOnLast } from "./AnimationExample.mjs";
+
+export let thisCurrentBackground;
+export let thisCurrentPlace;
 
 export class Place {
     constructor (background, navegationButtons = [], newPlaces = [], currentPlace,  buttons = [], canvas = [], activateFunctions = [], deactivateFunctions = []) {
@@ -20,8 +24,7 @@ export class Place {
          //functions called when place is activated/deactivated
          this.activateFunctions = activateFunctions;
          this.deactivateFunctions = deactivateFunctions;
-    }
-
+    };
     activate() {
       //Load background image
       Background(this.background);
@@ -45,7 +48,10 @@ export class Place {
         for (let i = 0; i < this.canvas.length; i++) {  
           this.canvas[i]();
        }}
-    } 
+       //Set variables to current place
+       thisCurrentBackground = this.background;
+       thisCurrentPlace = this.currentPlace;
+    };
     deactivate() {
       RemoveTextFunction();
       for (let i = 0; i < this.navegationButtons.length; i++) { 
@@ -74,74 +80,86 @@ export function Navegate(currentPlace, newPlace) {
 
 //Basic navegation buttons
 
-let leftbutton = false;
+let leftButtonBool = false;
+let leftbutton;
 
 function CreateLeftButton(newPlace, currentPlace) {
-  if (!leftbutton) {
-   let leftbutton = CreateButton("leftbutton", 110, 55, 48, 648, function() {
+  if (!leftButtonBool) {
+    leftbutton = CreateButton("leftbutton", 110, 55, 48, 648, function() {
     Navegate(currentPlace, newPlace)
         });
         leftbutton.style.display = "block";
+        leftButtonBool = true;
   } else {
     leftbutton.remove();
+    leftButtonBool = false;
   }
  
 }
 
 let rightbutton = false;
+let rightButtonBool = false;
 
 function CreateRightButton(newPlace, currentPlace) {
-if (!rightbutton) {
-  let rightbutton = CreateButton("rightbutton", 935, 55, 48, 648, function() {
+if (!rightButtonBool) {
+    rightbutton = CreateButton("rightbutton", 935, 55, 48, 648, function() {
     Navegate(currentPlace, newPlace)
      });
      rightbutton.style.display = "block";
+     rightButtonBool = true;
 } else {
   rightbutton.remove();
+  rightButtonBool = false;
 }   
  }
   
- let backbutton = false;
+ let backButtonBool = false;
+ let backbutton= false;
 
  function CreateBackButton(newPlace, currentPlace) {
-  if (!backbutton) {
-    let backbutton = CreateButton("backbutton", 115, 655, 864, 48, function() {
+  if (!backButtonBool) {
+      backbutton = CreateButton("backbutton", 115, 655, 864, 48, function() {
       Navegate(currentPlace, newPlace)
       });
       backbutton.style.display = "block";
+      backButtonBool = true;
   } else {
     backbutton.remove();
+    backButtonBool = false;
   }
  }
 
  let upbutton = false;
+ let upButtonBool = false;
 
  function CreateUpButton(newPlace, currentPlace) {
-  if (!upbutton) {
+  if (!upButtonBool) {
       upbutton = CreateButton("upbutton", 115, 60, 864, 48, function() {
       Navegate(currentPlace, newPlace)
       });
       upbutton.style.display = "block";
+      upButtonBool = true;
   } else {
     upbutton.remove();
+    upButtonBool = false;
   }
  }
 
  export let navegation = [CreateLeftButton, CreateRightButton, CreateBackButton]
 
 //Usage examples 
-export let example;   //CabinPond
-export let example1;  //Riverboat
-export let example2;  //Pond
-export let example3;  //Buswreck
-export let example4;  //insideCabin
+export let example;   
+export let example1;  
+export let example2;  
+export let example3;  
+export let example4;  
 
 //Initiate class objects
 example = new Place(exampleImage, navegation, [example1, example3, example2], example, [EnterDoorButton], [SceneItemCanvas], [LoadedWhenPlaceClassIsInitiated], [LoadedWhenPlaceClassIsRemoved]);
 example1 = new Place(example1Image, navegation, [example2, example, example3], example1, [PlaceTextButton], [ImageCanvasForTextButton]);
-example2 = new Place(example2Image, navegation, [example3, example1, example], example2);
-example3 = new Place(example3Image, navegation, [example, example2, example1], example3);
-example4 = new Place(example4Image, [CreateBackButton], [example], example4);
+example2 = new Place(example2Image, navegation, [example3, example1, example], example2, [AnimationButton], [], [], [StopAnimation]);
+example3 = new Place(example3Image, navegation, [example, example2, example1], example3, [AnimationStopOnLastButton], [], [], [StopAnimationStopOnLast]);
+example4 = new Place(example4Image, {navegationButtons: [CreateBackButton]}, [example], example4);
 
 //Make sure the objects are initiated when used in other objects of the Place class
 example.currentPlace = example;
